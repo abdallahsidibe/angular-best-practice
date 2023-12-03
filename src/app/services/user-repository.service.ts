@@ -1,23 +1,29 @@
-import { Injectable } from '@angular/core';
-import { Observable, EMPTY, throwError, timer } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {Observable, EMPTY, throwError, timer, delay} from 'rxjs';
 
 
-import { IUser } from '../users/user.model';
+import {IUser} from '../users/user.model';
 
 @Injectable()
 export class UserRepositoryService {
   currentUser: IUser | null = null;
 
-  constructor() { }
+  constructor() {
+  }
 
 
-  saveUser(user: IUser): Observable<any> {
+  /*saveUser(user: IUser): Observable<any> {
     user.classes = user.classes || [];
     this.currentUser = user;
 
     return timer(1000);
-  }
+  }*/
+  saveUser(user: IUser): Observable<IUser> {
+    let classes = user.classes || [];
+    this.currentUser = {...user, classes: [...classes]};
 
+    return EMPTY.pipe(delay(1000));
+  }
   enroll(classId: string): Observable<any> {
     if (!this.currentUser)
       return throwError(() => new Error('User not signed in'));
@@ -25,7 +31,10 @@ export class UserRepositoryService {
     if (this.currentUser.classes.includes(classId))
       return throwError(() => new Error('Already enrolled'));
 
-    this.currentUser.classes.push(classId);
+    // this.currentUser.classes.push(classId);
+    // l'opérateur de spread (...) pour créer une nouvelle copie de l'objet currentUser,
+    // puis ajoute la nouvelle propriété classes à la copie
+    this.currentUser = {...this.currentUser, classes: this.currentUser.classes.concat(classId)}
 
     return timer(1000);
   }
@@ -37,7 +46,12 @@ export class UserRepositoryService {
     if (!this.currentUser.classes.includes(classId))
       return throwError(() => new Error('Not enrolled'));
 
-    this.currentUser.classes = this.currentUser.classes.filter((c: string) => c !== classId);
+    //this.currentUser.classes = this.currentUser.classes.filter((c: string) => c !== classId);
+    this.currentUser = {
+      ...this.currentUser,
+      classes: this.currentUser.classes.filter((c: string) => c !== classId)
+    }
+
 
     return timer(1000);
   }
