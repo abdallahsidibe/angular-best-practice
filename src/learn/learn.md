@@ -1,4 +1,4 @@
-# The Single Responsibility Principle : principe de responsabilité unique (SRP)
+# The Single Responsibility Principle (SRP)
 
 Le principe de responsabilité unique (SRP) est un principe de conception logiciel qui stipule qu'une classe (ou une méthode) ne devrait avoir qu'une seule raison de changer. 
 En d'autres termes, une classe devrait être responsable d'une seule fonctionnalité ou d'un seul ensemble de tâches étroitement liées.
